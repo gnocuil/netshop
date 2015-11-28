@@ -2,6 +2,7 @@
 #coding=utf-8 
 
 import httplib
+import re
 
 class Member:
     id=0
@@ -25,15 +26,27 @@ class NetshopPhoto:
         r = self.conn.getresponse()
         if r.status!=200: return
         t=r.read()
-        p=re.compile(ur'5Ã¶¥»¥Ã¥È\s+([^\s]+)\s')
+        t=t.decode('utf-8','ignore')
+        p=re.compile(ur'5æžšã‚»ãƒƒãƒˆ ([^|]+)\s')
         m=p.search(t)
         if m:
             name=m.group(1)
-            print name
+        else:
+            print 'not found'
+            return
+        #print 
         if t.find('soldout')>0:
             soldout=True
-            print 'Sold Out!'
+            #print 'name='+name+': Sold Out!'
+        else:
+            print name+' ',
         return
+    def doit(self):
+        i=self.start
+        while i<=self.end:
+            self.check(i)
+            i=i+1
         
 nsp=NetshopPhoto(35174,35255)
-nsp.check(35174)
+#nsp.check(35174)
+nsp.doit()
